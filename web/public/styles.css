@@ -1,0 +1,165 @@
+:root {
+  --bg: #0b0f14;
+  --panel: #121824;
+  --text: #e8eef6;
+  --muted: #9fb0c4;
+  --border: rgba(255,255,255,0.08);
+  --btn: rgba(255,255,255,0.10);
+  --btn2: rgba(255,255,255,0.16);
+  --good: rgba(80, 220, 140, 0.18);
+  --bad: rgba(255, 120, 120, 0.18);
+}
+
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font-family: system-ui, Segoe UI, Arial; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+.hdr { display:flex; align-items: baseline; gap:12px; margin-bottom:16px; }
+.hdr h1 { margin:0; font-size: 44px; }
+.sub { color: var(--muted); }
+
+.screen { display:grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.hidden { display:none; }
+
+.panel {
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  min-height: 180px;
+}
+
+h2 { margin: 0 0 10px 0; font-size: 22px; }
+
+.grid { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+label { display:flex; flex-direction:column; gap: 6px; color: var(--muted); }
+input, select {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.25);
+  color: var(--text);
+}
+
+.checkrow { flex-direction: row; align-items:center; gap: 10px; margin-top: 8px; }
+
+.btn {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--btn);
+  color: var(--text);
+  cursor: pointer;
+}
+.btn:hover { background: var(--btn2); }
+.btn.ghost { background: transparent; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.rowbtns { display:flex; gap: 10px; flex-wrap: wrap; }
+
+.log {
+  background: rgba(0,0,0,0.25);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  height: 320px;
+  overflow:auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre-wrap;
+}
+
+.toprow { display:flex; justify-content: space-between; align-items: center; }
+.kicker { color: var(--muted); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+.big { font-size: 26px; font-weight: 700; }
+.bigmono { font-size: 20px; font-family: ui-monospace, Menlo, Consolas, monospace; }
+.muted { color: var(--muted); }
+
+.table { display:flex; flex-direction:column; gap: 12px; margin-top: 12px; }
+
+.box {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba(0,0,0,0.15);
+}
+
+.row2 {
+  display:grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.cards { font-size: 22px; font-weight: 700; margin-top: 6px; letter-spacing: 0.02em; }
+
+.actions { display:flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.actions button {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--btn);
+  color: var(--text);
+  cursor: pointer;
+}
+.actions button:hover { background: var(--btn2); }
+.actions button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.hud { display:flex; gap: 14px; align-items:flex-end; }
+.hudItem { text-align:right; min-width: 90px; }
+
+.seatHdr { display:flex; align-items:center; justify-content:space-between; gap: 8px; }
+.chipline { display:flex; align-items:center; justify-content:flex-end; min-width: 30px; }
+
+.btnChip {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.12);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.banner {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+}
+.banner.win { background: var(--good); }
+.banner.lose { background: var(--bad); }
+
+.boardBox { display:flex; flex-direction:column; justify-content:space-between; }
+
+.betPanel {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: grid;
+  gap: 8px;
+}
+
+.betRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.thinking {
+  margin: 10px 0 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.thinking.hidden {
+  display: none;
+}

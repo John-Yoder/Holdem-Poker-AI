@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Poker Bot</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+
+  <body>
+    <div class="wrap">
+      <div class="hdr">
+        <h1>Poker Bot</h1>
+        <div class="sub">Postflop trainer · logged sessions</div>
+      </div>
+
+      <!-- SETUP -->
+      <div id="screenSetup" class="screen">
+        <div class="panel">
+          <h2>Setup</h2>
+
+          <div class="grid">
+            <label>
+              Player name (required)
+              <input id="playerName" type="text" placeholder="e.g. John" autocomplete="off" />
+            </label>
+
+            <label>
+              Hands
+              <input id="hands" type="number" value="10" min="1" />
+            </label>
+
+            <label>
+              Iters
+              <input id="iters" type="number" value="800" min="50" step="50" />
+            </label>
+
+            <label>
+              Seed
+              <input id="seed" type="number" value="1" />
+            </label>
+
+            <label>
+              Pot (bb)
+              <input id="pot" type="number" value="6" min="0.5" step="0.5" />
+            </label>
+
+            <label>
+              Stacks (bb)
+              <input id="stacks" type="number" value="150" min="1" step="1" />
+            </label>
+
+            <label>
+              You control
+              <select id="human">
+                <option value="hero">Hero</option>
+                <option value="villain">Villain</option>
+              </select>
+            </label>
+
+            <label>
+              Dealer button starts on
+              <select id="start_ip">
+                <option value="hero">Hero (IP)</option>
+                <option value="villain">Villain (IP)</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="checkrow">
+            <input id="no_allin" type="checkbox" checked />
+            No ALLIN (recomended)
+          </label>
+
+          <div class="rowbtns">
+            <button id="startBtn" class="btn">Start match</button>
+            <button id="downloadLogBtn" class="btn ghost" disabled>Download my logs</button>
+          </div>
+
+          <div class="muted" style="margin-top:10px">
+            Logs are saved server-side as append-only JSONL by player name.
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Tips</h2>
+          <div class="muted">
+            The UI pauses after each hand. Hit <b>Next hand</b> when you’re ready.
+            Villain’s hand is always shown in this mode.
+          </div>
+
+          <div style="margin-top:12px" class="box">
+            <div class="kicker">Debug console</div>
+            <div id="statusLine" class="bigmono">—</div>
+          </div>
+
+          <pre id="log" class="log"></pre>
+        </div>
+      </div>
+
+      <!-- GAME -->
+      <div id="screenGame" class="screen hidden">
+        <div class="panel">
+          <div class="toprow">
+            <div>
+              <div class="kicker">Hand</div>
+              <div id="handTitle" class="big">—</div>
+            </div>
+
+            <div class="hud">
+              <div class="hudItem">
+                <div class="kicker">Street</div>
+                <div id="street" class="bigmono">—</div>
+              </div>
+              <div class="hudItem">
+                <div class="kicker">Pot</div>
+                <div id="potLine" class="bigmono">—</div>
+              </div>
+              <div class="hudItem">
+                <div class="kicker">To act</div>
+                <div id="toActLine" class="bigmono">—</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="resultBanner" class="banner hidden"></div>
+
+          <div class="table">
+            <div class="row2">
+              <div class="seat box">
+                <div class="seatHdr">
+                  <div class="kicker" id="heroPos">HERO</div>
+                  <div class="chipline"><span id="heroBtn" class="btnChip hidden">D</span></div>
+                </div>
+                <div class="cards" id="heroCards">?? ??</div>
+                <div class="muted" id="heroStackLine">Stack: —</div>
+              </div>
+
+              <div class="box boardBox">
+                <div class="kicker">Board</div>
+                <div class="cards" id="board">—</div>
+
+                <!-- clearer betting summary -->
+                <div class="betPanel">
+                  <div class="betRow">
+                    <span class="kicker">Facing</span>
+                    <span id="betLine" class="bigmono">—</span>
+                  </div>
+                  <div class="betRow">
+                    <span class="kicker">Pot odds</span>
+                    <span id="oddsLine" class="bigmono">—</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="seat box">
+                <div class="seatHdr">
+                  <div class="kicker" id="villPos">VILLAIN</div>
+                  <div class="chipline"><span id="villBtn" class="btnChip hidden">D</span></div>
+                </div>
+                <div class="cards" id="villCards">?? ??</div>
+                <div class="muted" id="villStackLine">Stack: —</div>
+              </div>
+            </div>
+
+            <div class="box">
+              <div class="kicker">Your hand strength</div>
+              <div id="yourStrength" class="bigmono">—</div>
+            </div>
+
+            <div>
+              <div class="kicker">Actions</div>
+
+              <!-- agent thinking indicator -->
+              <div id="thinkingLine" class="thinking hidden">Agent is thinking…</div>
+
+              <div id="actions" class="actions"></div>
+
+              <div class="rowbtns">
+                <button id="nextHandBtn" class="btn" disabled>Next hand</button>
+                <button id="backBtn" class="btn ghost">End match</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="toprow">
+            <h2 style="margin:0">Hand log</h2>
+            <div class="muted" id="stacksLine">—</div>
+          </div>
+
+          <pre id="handLog" class="log"></pre>
+
+          <div class="muted" style="margin-top:10px">
+            Villain hand is always shown in this mode.
+          </div>
+        </div>
+      </div>
+
+      <!-- END -->
+      <div id="screenEnd" class="screen hidden">
+        <div class="panel">
+          <h2>Match results</h2>
+          <div id="finalLine" class="bigmono"></div>
+          <div id="summary" class="muted" style="margin-top:10px"></div>
+
+          <div class="rowbtns">
+            <button id="quitBtn" class="btn">Back to setup</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Results log</h2>
+          <pre id="resultsLog" class="log"></pre>
+        </div>
+      </div>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
